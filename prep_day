@@ -1,0 +1,20 @@
+#!/bin/sh
+day=${1:-"1"}   # provide the day as arg; set to 1 by default
+directory=$1
+
+mkdir $directory
+touch $directory/__init__.py
+
+cp ./template.py $directory/a.py
+cp ./template.py $directory/b.py
+
+# Session id copied from browser cookies and saved into file (local only)
+session=`cat .session_cookie`  # note the back ticks!
+
+# download the input txt
+curl https://adventofcode.com/2020/day/{$day}/input --cookie "session=${session}" >> "$directory/in.txt"
+
+echo "Got the input for day $day:"
+cat "$directory/in.txt"
+
+cd $directory  # source this file to actually cd into the directory

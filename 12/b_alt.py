@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 """Part B
-Any fractional angle value is possible, but rotations are still limited to 90°
-increments. Approach: don't model the angle itself at all, instead use rotation
-rules to modify x and y."""
+Alternative approach: calculate rotation with a standard rotation matrix valid
+for any angle. Since for this problem we know that we'll always end up on
+integer coordinates, we can round after every rotation."""
 
 
 import fileinput
+from math import cos, pi, sin
 
 
 def sol(lines):
@@ -26,12 +27,12 @@ def sol(lines):
             x -= val
         elif cmd == 'S':
             y -= val
-        elif cmd == 'R':
-            for _ in range(0, val % 360, 90):
-                y, x = -x, y  # rotate 90° clockwise
-        elif cmd == 'L':
-            for _ in range(0, val % 360, 90):
-                y, x = x, -y  # rotate 90° counterclockwise
+        elif cmd in 'LR':
+            angle = [1, -1][cmd == 'R'] * pi * (val / 180)
+            x_ = cos(angle) * x - sin(angle) * y
+            y_ = sin(angle) * x + cos(angle) * y
+            # we know we'll land on integer coords --> eliminate float error
+            x, y = round(x_), round(y_)
         else:
             sx += val * x
             sy += val * y

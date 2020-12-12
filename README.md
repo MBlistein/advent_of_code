@@ -1,5 +1,6 @@
 # Advent of Code 2020
 My puzzle solutions for Advent of Code 2020. Mainly solving puzzles in python, but may implement some in C++ as well.
+Note: I try to complete the puzzles as fast as possible without regard for clean code or architecture :-).
 
 ## Build & Run
 ### Python

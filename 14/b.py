@@ -8,10 +8,6 @@ import fileinput
 from typing import List
 
 
-def int_from_bin_list(lst: List[str]) -> int:
-    return int(''.join(lst), 2)
-
-
 def sol(lines: List[str]) -> None:
     mem = {}
     cle_masks, set_masks = [], []
@@ -26,20 +22,19 @@ def sol(lines: List[str]) -> None:
                 mem[masked_address] = val
         else:
             mask = l.split()[-1]
-            cle_masks = [[]]
-            set_masks = [[]]
+            cle_masks = [0]
+            set_masks = [0]
             for idx in range(len(mask)):
                 for j in range(len(cle_masks)):
-                    cle_masks[j].append('1')  # if X: don't clear
-                    set_masks[j].append('0' if mask[idx] == '0' else '1')  # if X: do set
+                    cle_masks[j] <<= 1
+                    cle_masks[j] |= 1  # if X: don't clear
+                    set_masks[j] <<= 1
+                    set_masks[j] |= 0 if mask[idx] == '0' else 1  # if X: do set
 
                 if mask[idx] == 'X':
                     for k in range(len(cle_masks)):
-                        cle_masks.append(cle_masks[k][:-1] + ['0'])  # do clear
-                        set_masks.append(set_masks[k][:-1] + ['0'])  # don't set
-
-            cle_masks = list(map(int_from_bin_list, cle_masks))
-            set_masks = list(map(int_from_bin_list, set_masks))
+                        cle_masks.append(cle_masks[k] & ~1)  # do clear
+                        set_masks.append(set_masks[k] & ~1)  # don't set
 
     print(sum(mem.values()))
 

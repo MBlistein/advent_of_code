@@ -7,8 +7,8 @@ import fileinput
 
 
 def sol(lines):
-    for l in lines:
-        print(l)
+    for line in lines:
+        print(line)
 
 
 if __name__ == "__main__":

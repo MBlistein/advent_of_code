@@ -49,10 +49,9 @@ def sol(lines):
     debug_print(debug, hypercube)
 
     for _ in range(num_cycles):
-        new = copy.deepcopy(hypercube)
         if debug:
-            print()
-            print('########################')
+            print('\n########################')
+        new = copy.deepcopy(hypercube)
         for g in range(1, num_grids-1):
             for l in range(1, num_layers-1):
                 for r in range(1, final_rows-1):

@@ -19,7 +19,7 @@ def num_occupied(grid, layer, row, col):
     return num_occ
 
 
-def sol(lines):
+def sol(lines, debug):
     grid = []
     init_layer = []
     for line in lines:
@@ -40,15 +40,16 @@ def sol(lines):
         for c in range(num_cols):
             grid[buffer][buffer + r][buffer + c] = init_layer[r][c]
 
-    # for l in grid:
-    #     print()
-    #     for r in l:
-    #         print(''.join(r))
+    if debug:
+        for l in grid:
+            print()
+            for r in l:
+                print(''.join(r))
 
     for _ in range(num_cycles):
+        if debug:
+            print('\n########################')
         new = copy.deepcopy(grid)
-        # print()
-        # print('########################')
         for l in range(1, num_layers-1):
             for r in range(1, final_rows-1):
                 for c in range(1, final_cols-1):
@@ -58,10 +59,11 @@ def sol(lines):
                     elif grid[l][r][c] == '.' and num_occ == 3:
                         new[l][r][c] = '#'
         grid = new
-        # for l in grid:
-        #     print()
-        #     for r in l:
-        #         print(''.join(r))
+        if debug:
+            for l in grid:
+                print()
+                for r in l:
+                    print(''.join(r))
 
     tot_active = 0
     for l in range(num_layers):
@@ -74,4 +76,4 @@ def sol(lines):
 
 if __name__ == "__main__":
     lines = [l.strip() for l in fileinput.input()]
-    sol(lines)
+    sol(lines, False)

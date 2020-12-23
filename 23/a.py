@@ -1,57 +1,42 @@
 #!/usr/bin/env python3
 
-"""Template for AOC python scripts"""
+"""Brute force: rotate the list left, process, rotate back."""
 
 
 import fileinput
 
 
-N = int(input())
-
-
 def sol(lines):
     lst = list(map(int, list(lines[0])))
     idx = 0
-    step = 1
-    print(lst)
     n = len(lst)
-    for _ in range(N):
-        print()
+    for _ in range(int(input("Input number of moves: "))):
         lst = rotate(lst, idx)
         idx = (idx + 1) % n
-        print(f"After step {step}: {lst}")
-        step += 1
+
+    jdx = lst.index(1)
+    print(''.join(map(str, lst[jdx+1:] + lst[:jdx])))
 
 
 def rotate(L, start_idx):
-    """make start element first element in list --> process --> rotate back"""
-    n = len(L)
-    new = L[start_idx:] + L[:start_idx]
-    nxt_smaller = new[0] - 1
-    if nxt_smaller == 0:
-        nxt_smaller = 9
-    print('new:', new)
+    """rotate L left to make start element first element in list.
+    Then process and rotate back"""
+    NL = L[start_idx:] + L[:start_idx]
+    nxt_smaller = (NL[0] - 1) or 9
 
-    removed = new[1: 4]
-    new = [new[0]] + new[4:]
-    print('cut:', new)
+    removed = NL[1: 4]
+    NL = [NL[0]] + NL[4:]
 
     for _ in range(3):
         if nxt_smaller in removed:
-            nxt_smaller -= 1
-            if nxt_smaller == 0:
-                nxt_smaller = 9
+            nxt_smaller = (nxt_smaller - 1) or 9
 
-    for kdx in range(1, len(new)):
-        if new[kdx] == nxt_smaller:
-            new = new[:kdx + 1] + removed + new[kdx + 1: ]
-            print(f'insert at idx {kdx}')
+    for jdx in range(1, len(NL)):
+        if NL[jdx] == nxt_smaller:
+            NL = NL[:jdx + 1] + removed + NL[jdx + 1: ]
             break
-        else:
-            print(f'{new}[{kdx}] = {new[kdx]} != {nxt_smaller}')
-    print('ins:', new)
 
-    return new[-start_idx:] + new[: -start_idx]  # rotate back
+    return NL[-start_idx:] + NL[: -start_idx]  # rotate back
 
 
 if __name__ == "__main__":

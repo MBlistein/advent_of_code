@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""Template for AOC python scripts"""
+"""Brute force: Use circular doubly linked list to simulate each move in O(1)"""
 
 
 import fileinput
-
-
-N = int(input())
+from typing import List, Tuple
 
 
 class Node:
@@ -42,10 +40,9 @@ def insert_after(node, sublist_head):
     right.prev = sublist_tail
 
 
-def sol(lines):
-    cnt = 1
+def construct_dll(numbers: List[int]) -> dict:
+    """Creates a doubly linked list, returns a dict mapping keys to nodes"""
     nodes = {}
-    numbers = list(map(int, lines[0]))
     for idx, num in enumerate(numbers):
         node = Node(num)
         if idx > 0:
@@ -72,11 +69,16 @@ def sol(lines):
     nodes[999999].next = nodeM
     nodes[1000000] = nodeM
 
+    return nodes
+
+
+def sol(lines):
+    numbers = list(map(int, lines[0]))
+    N = int(input("Number of moves: "))
+    nodes = construct_dll(numbers)
+
     startnode = nodes[numbers[0]]
     for _ in range(N):
-        # if cnt % 1000 == 0:
-        #     print(cnt)
-        # cnt += 1
         sublist_head = remove_next_3(startnode)
 
         removed_vals = []
@@ -100,37 +102,6 @@ def sol(lines):
     res = nodes[1].next.val * nodes[1].next.next.val
     print(nodes[1].next.val, nodes[1].next.next.val)
     print(res)
-
-
-def rotate(L, start_idx):
-    """make start element first element in list --> process --> rotate back"""
-    n = len(L)
-    new = L[start_idx:] + L[:start_idx]
-    nxt_smaller = new[0] - 1
-    if nxt_smaller == 0:
-        nxt_smaller = 9
-    print('new:', new)
-
-    removed = new[1: 4]
-    new = [new[0]] + new[4:]
-    print('cut:', new)
-
-    for _ in range(3):
-        if nxt_smaller in removed:
-            nxt_smaller -= 1
-            if nxt_smaller == 0:
-                nxt_smaller = 9
-
-    for kdx in range(1, len(new)):
-        if new[kdx] == nxt_smaller:
-            new = new[:kdx + 1] + removed + new[kdx + 1: ]
-            print(f'insert at idx {kdx}')
-            break
-        else:
-            print(f'{new}[{kdx}] = {new[kdx]} != {nxt_smaller}')
-    print('ins:', new)
-
-    return new[-start_idx:] + new[: -start_idx]  # rotate back
 
 
 if __name__ == "__main__":
